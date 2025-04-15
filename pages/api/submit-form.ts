@@ -10,6 +10,10 @@ import {
   WebhookClient,
   ComponentType,
   Partials,
+  ModalBuilder,
+  TextInputBuilder,
+  TextInputStyle,
+  InteractionType,
 } from 'discord.js';
 
 const client = new Client({
@@ -35,6 +39,59 @@ client.once('ready', () => {
 if (!client.isReady()) {
   client.login(token).catch(console.error);
 }
+
+// Handle modal submit for accept/reject
+client.on(Events.InteractionCreate, async (interaction) => {
+  if (interaction.type !== InteractionType.ModalSubmit) return;
+  if (!interaction.customId.startsWith('modal_')) return;
+
+  const [_, action, userId] = interaction.customId.split('_');
+  const reason = interaction.fields.getTextInputValue('reason_input');
+  const staffName = interaction.user.username;
+
+  const decisionEmbed = new EmbedBuilder()
+    .setTitle(`🎮 Application ${action === 'accept' ? 'Accepted' : 'Rejected'}`)
+    .setDescription(
+      `**User:** <@${userId}>\n**Staff:** ${staffName}\n**Status:** ${
+        action === 'accept' ? '✅ Accepted' : '❌ Rejected'
+      }\n**Reason:** ${reason}`
+    )
+    .setColor(action === 'accept' ? 0x00ff00 : 0xff0000)
+    .setTimestamp();
+
+  await webhook.send({ embeds: [decisionEmbed] });
+
+  try {
+    const user = await client.users.fetch(userId);
+    await user.send({
+      embeds: [
+        new EmbedBuilder()
+          .setTitle('📜 Whitelist Application Result')
+          .setDescription(
+            `Your application has been **${action === 'accept' ? 'Accepted 🎉' : 'Rejected ❌'}** by **${staffName}**.\n**Reason:** ${reason}`
+          )
+          .setColor(action === 'accept' ? 0x00ff00 : 0xff0000)
+          .setTimestamp(),
+      ],
+    });
+  } catch {
+    console.warn(`⚠️ Could not send DM to user: ${userId}`);
+  }
+
+  try {
+    const message = await interaction.channel?.messages.fetch(interaction.message?.id || '');
+    const disabledRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
+      message.components[0].components.map((btn: any) =>
+        ButtonBuilder.from(btn).setDisabled(true)
+      )
+    );
+    await message.edit({ components: [disabledRow] });
+  } catch (e) {
+    console.error('⚠️ Failed to disable buttons:', e);
+  }
+
+  await interaction.reply({ content: `Application ${action}ed with reason.`, ephemeral: true });
+});
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') return res.status(405).end('Method not allowed');
@@ -103,55 +160,29 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
 
     const collector = sentMessage.createMessageComponentCollector({
-      componentType: ComponentType.Button, // 10 mins
+      componentType: ComponentType.Button,
+      time: 10 * 60 * 1000, // 10 minutes
     });
 
     collector.on('collect', async (interaction) => {
-      const [action, userId] = interaction.customId.split('_');
-      const staffName = interaction.user.username;
-
       if (interaction.user.bot) return;
 
-      await interaction.deferUpdate();
+      const [action, userId] = interaction.customId.split('_');
 
-      const decisionEmbed = new EmbedBuilder()
-        .setTitle(`🎮 Application ${action === 'accept' ? 'Accepted' : 'Rejected'}`)
-        .setDescription(
-          `**User:** <@${userId}>\n**Staff:** ${staffName}\n**Status:** ${
-            action === 'accept' ? '✅ Accepted' : '❌ Rejected'
-          }`
-        )
-        .setColor(action === 'accept' ? 0x00ff00 : 0xff0000)
-        .setTimestamp();
+      const modal = new ModalBuilder()
+        .setCustomId(`modal_${action}_${userId}`)
+        .setTitle(`${action === 'accept' ? 'Accept' : 'Reject'} Reason`);
 
-      // Send embed to webhook
-      await webhook.send({ embeds: [decisionEmbed] });
+      const reasonInput = new TextInputBuilder()
+        .setCustomId('reason_input')
+        .setLabel('Enter your reason')
+        .setStyle(TextInputStyle.Paragraph)
+        .setRequired(true);
 
-      // Try to DM the user
-      try {
-        const user = await client.users.fetch(userId);
-        await user.send({
-          embeds: [
-            new EmbedBuilder()
-              .setTitle('📜 Whitelist Application Result')
-              .setDescription(
-                `Your application has been **${action === 'accept' ? 'Accepted 🎉' : 'Rejected ❌'}** by **${staffName}**.`
-              )
-              .setColor(action === 'accept' ? 0x00ff00 : 0xff0000)
-              .setTimestamp(),
-          ],
-        });
-      } catch (e) {
-        console.warn(`⚠️ Could not send DM to user: ${userId}`);
-      }
+      const modalRow = new ActionRowBuilder<TextInputBuilder>().addComponents(reasonInput);
+      modal.addComponents(modalRow);
 
-      // Disable buttons after interaction
-      const disabledRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
-        row.components.map((btn) => ButtonBuilder.from(btn).setDisabled(true))
-      );
-      await sentMessage.edit({ components: [disabledRow] });
-
-      collector.stop();
+      await interaction.showModal(modal);
     });
 
     return res.status(200).json({ success: true });
