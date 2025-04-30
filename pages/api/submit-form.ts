@@ -26,9 +26,9 @@ const client = new Client({
   partials: [Partials.Channel],
 });
 
-const token = 'MTMyODY2MjQ5MTU2MzI5NDcyMA.GygYWK.hHx60t9ZeXwKaYe5yypp5n5n7M40fM9UafMpss';
-const channelId = '1361377769619198142';
-const webhookUrl = 'https://discord.com/api/webhooks/1361377804452757706/o1NGOPNIMy7JSD3lhz0yMxRDbai1ELfcVZL6Qt-2W-26aPafPFdaGPoaqIrOEi9BPXBh'; // Webhook URL for embed response
+const token = process.env.DISCORD_BOT_TOKEN!;
+const channelId = process.env.LOG_CHANNEL_ID!;
+const webhookUrl = process.env.WEBHOOKURL!;
 
 const webhook = new WebhookClient({ url: webhookUrl });
 
@@ -40,7 +40,6 @@ if (!client.isReady()) {
   client.login(token).catch(console.error);
 }
 
-// Handle modal submit for accept/reject
 client.on(Events.InteractionCreate, async (interaction) => {
   if (interaction.type !== InteractionType.ModalSubmit) return;
   if (!interaction.customId.startsWith('modal_')) return;
@@ -161,7 +160,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const collector = sentMessage.createMessageComponentCollector({
       componentType: ComponentType.Button,
-      time: 10 * 60 * 1000, // 10 minutes
+      time: 10 * 60 * 1000,
     });
 
     collector.on('collect', async (interaction) => {

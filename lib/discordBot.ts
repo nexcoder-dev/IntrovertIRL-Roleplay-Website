@@ -43,19 +43,16 @@ client.on('interactionCreate', async (interaction) => {
     .setTimestamp();
 
   try {
-    // Reply to the moderator (ephemeral)
     await interaction.reply({
       content: `You have **${action}ed** the application for <@${userId}>.`,
       ephemeral: true,
     });
 
-    // DM the user
     const targetUser = await client.users.fetch(userId);
     await targetUser.send({ embeds: [dmEmbed] }).catch(() => {
       console.warn(`❌ Could not send DM to ${targetUser.tag}`);
     });
 
-    // Send to log channel
     const logChannel = client.channels.cache.get(logChannelId) as TextChannel;
     if (logChannel) {
       await logChannel.send({ embeds: [logEmbed] });

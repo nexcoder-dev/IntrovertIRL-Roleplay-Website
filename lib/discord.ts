@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-const DISCORD_CLIENT_ID = '1328662491563294720';
+const DISCORD_CLIENT_ID = process.env.CLIENT_ID!;
 let REDIRECT_URI = '';
 
 if (typeof window !== 'undefined') {
