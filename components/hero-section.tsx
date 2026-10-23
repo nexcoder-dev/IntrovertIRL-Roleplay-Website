@@ -45,7 +45,7 @@ export function HeroSection() {
       {/* Content */}
       <div className="container mx-auto px-4 z-10 text-center">
         <h1 className="text-5xl md:text-7xl font-extrabold mb-6 bg-gradient-to-r from-orange-500 via-white to-green-600 bg-clip-text text-transparent">
-          STARLINE ROLEPLAY
+          INTROVERTIRL ROLEPLAY
         </h1>
         <p className="text-xl md:text-2xl text-zinc-300 max-w-3xl mx-auto mb-8">
           Experience the most immersive GTA 5 FiveM roleplay server with custom scripts, unique jobs, and a thriving
@@ -55,12 +55,17 @@ export function HeroSection() {
           <Button
             size="lg"
             className="bg-gradient-to-r from-orange-500 to-green-600 hover:from-orange-600 hover:to-green-700 text-lg"
+            asChild
           >
-            Join Now
-            <ChevronRight className="ml-2 h-5 w-5" />
+            <a href="#join">
+              Join Now
+              <ChevronRight className="ml-2 h-5 w-5" />
+            </a>
           </Button>
-          <Button size="lg" variant="outline" className="border-zinc-700 hover:bg-zinc-800 text-lg">
-            Watch Trailer
+          <Button size="lg" variant="outline" className="border-zinc-700 hover:bg-zinc-800 text-lg" asChild>
+            <a href="#features">
+              Explore Features
+            </a>
           </Button>
         </div>
 

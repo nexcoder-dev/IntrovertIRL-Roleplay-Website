@@ -10,14 +10,14 @@ export function Community() {
       name: "Alex_RP",
       role: "Police Officer",
       content:
-        "Starline RP has the most professional staff and amazing community I've ever seen. The custom scripts and jobs make the experience incredibly immersive.",
+        "IntrovertIRL RP has the most professional staff and amazing community I've ever seen. The custom scripts and jobs make the experience incredibly immersive.",
     },
     {
       avatar: "/placeholder.svg?height=100&width=100",
       name: "Sarah_Gaming",
       role: "EMS Chief",
       content:
-        "I've been on many RP servers but none compare to Starline. The economy is balanced, the community is helpful, and the roleplay scenarios are always exciting.",
+        "I've been on many RP servers but none compare to IntrovertIRL. The economy is balanced, the community is helpful, and the roleplay scenarios are always exciting.",
     },
     {
       avatar: "/placeholder.svg?height=100&width=100",
@@ -202,7 +202,7 @@ export function Community() {
                   </div>
                   <h3 className="text-xl font-bold">Arjun Singh</h3>
                   <p className="text-sm text-green-400 mb-2">Livestreamer</p>
-                  <p className="text-zinc-400 text-sm">Broadcasting daily adventures in Starline RP</p>
+                  <p className="text-zinc-400 text-sm">Broadcasting daily adventures in IntrovertIRL RP</p>
                   <div className="flex gap-2 mt-4">
                     <Button
                       variant="outline"
@@ -272,7 +272,7 @@ export function Community() {
   )
 }
 
-function Discord(props) {
+function Discord(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
@@ -299,7 +299,7 @@ function Discord(props) {
   )
 }
 
-function Instagram(props) {
+function Instagram(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}

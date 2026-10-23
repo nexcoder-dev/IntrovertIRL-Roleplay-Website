@@ -16,10 +16,10 @@ export default function Home() {
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <div className="relative w-10 h-10">
-              <Image src="/images/logo.png" alt="Starline RP Logo" width={40} height={40} className="object-contain" />
+              <Image src="/images/logo.png" alt="IntrovertIRL RP Logo" width={40} height={40} className="object-contain" />
             </div>
             <span className="text-2xl font-bold bg-gradient-to-r from-orange-500 via-white to-green-600 bg-clip-text text-transparent">
-              STARLINE RP
+              INTROVERTIRL RP
             </span>
           </Link>
           <nav className="hidden md:flex items-center gap-6">
@@ -39,8 +39,10 @@ export default function Home() {
               Community
             </a>
           </nav>
-          <Button className="bg-gradient-to-r from-orange-500 to-green-600 hover:from-orange-600 hover:to-green-700">
-            Join Discord
+          <Button className="bg-gradient-to-r from-orange-500 to-green-600 hover:from-orange-600 hover:to-green-700" asChild>
+            <a href="https://discord.gg" target="_blank" rel="noopener noreferrer">
+              Join Discord
+            </a>
           </Button>
         </div>
       </header>

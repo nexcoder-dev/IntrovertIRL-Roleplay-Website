@@ -43,7 +43,7 @@ export function Features() {
             Server Features
           </h2>
           <p className="text-xl text-zinc-400 max-w-3xl mx-auto">
-            Discover what makes Starline Roleplay the most immersive FiveM experience
+            Discover what makes IntrovertIRL Roleplay the most immersive FiveM experience
           </p>
         </div>
 

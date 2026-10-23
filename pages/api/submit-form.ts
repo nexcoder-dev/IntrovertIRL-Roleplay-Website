@@ -26,17 +26,17 @@ const client = new Client({
   partials: [Partials.Channel],
 });
 
-const token = process.env.DISCORD_BOT_TOKEN!;
-const channelId = process.env.LOG_CHANNEL_ID!;
-const webhookUrl = process.env.WEBHOOKURL!;
+const token = process.env.DISCORD_BOT_TOKEN;
+const channelId = process.env.LOG_CHANNEL_ID;
+const webhookUrl = process.env.WEBHOOKURL;
 
-const webhook = new WebhookClient({ url: webhookUrl });
+const webhook = webhookUrl ? new WebhookClient({ url: webhookUrl }) : null;
 
 client.once('ready', () => {
   console.log(`✅ Bot logged in as ${client.user?.tag}`);
 });
 
-if (!client.isReady()) {
+if (token && !client.isReady()) {
   client.login(token).catch(console.error);
 }
 
@@ -58,7 +58,9 @@ client.on(Events.InteractionCreate, async (interaction) => {
     .setColor(action === 'accept' ? 0x00ff00 : 0xff0000)
     .setTimestamp();
 
-  await webhook.send({ embeds: [decisionEmbed] });
+  if (webhook) {
+    await webhook.send({ embeds: [decisionEmbed] }).catch(console.error);
+  }
 
   try {
     const user = await client.users.fetch(userId);
@@ -78,13 +80,17 @@ client.on(Events.InteractionCreate, async (interaction) => {
   }
 
   try {
-    const message = await interaction.channel?.messages.fetch(interaction.message?.id || '');
-    const disabledRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
-      message.components[0].components.map((btn: any) =>
-        ButtonBuilder.from(btn).setDisabled(true)
-      )
-    );
-    await message.edit({ components: [disabledRow] });
+    if (interaction.channel && interaction.message?.id) {
+      const message = await interaction.channel.messages.fetch(interaction.message.id);
+      if (message && message.components?.[0]) {
+        const disabledRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
+          message.components[0].components.map((btn: any) =>
+            ButtonBuilder.from(btn).setDisabled(true)
+          )
+        );
+        await message.edit({ components: [disabledRow] });
+      }
+    }
   } catch (e) {
     console.error('⚠️ Failed to disable buttons:', e);
   }
@@ -110,8 +116,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   } = req.body;
 
   try {
+    if (!channelId || !token) {
+      return res.status(503).json({ error: 'Discord integration is not configured. Please set DISCORD_BOT_TOKEN and LOG_CHANNEL_ID.' });
+    }
+
     if (!client.isReady()) {
-      return res.status(503).json({ error: 'Bot is not ready yet' });
+      return res.status(503).json({ error: 'Discord bot is currently connecting, please try again shortly.' });
     }
 
     const channel = await client.channels.fetch(channelId);
@@ -163,7 +173,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       time: 10 * 60 * 1000,
     });
 
-    collector.on('collect', async (interaction) => {
+    collector.on('collect', async (interaction: any) => {
       if (interaction.user.bot) return;
 
       const [action, userId] = interaction.customId.split('_');

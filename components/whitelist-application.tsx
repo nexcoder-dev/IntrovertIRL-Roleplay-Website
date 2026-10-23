@@ -127,11 +127,11 @@ export function WhitelistApplication() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="whyJoin">Why do you want to join Starline RP?</Label>
+                  <Label htmlFor="whyJoin">Why do you want to join IntrovertIRL RP?</Label>
                   <Textarea
                     id="whyJoin"
                     name="whyJoin"
-                    placeholder="Tell us what attracts you to Starline RP and what you hope to contribute to our community..."
+                    placeholder="Tell us what attracts you to IntrovertIRL RP and what you hope to contribute to our community..."
                     className="min-h-[150px] bg-zinc-900 border-zinc-700"
                     value={formData.whyJoin}
                     onChange={handleChange}

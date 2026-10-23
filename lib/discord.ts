@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-const DISCORD_CLIENT_ID = process.env.CLIENT_ID!;
+const DISCORD_CLIENT_ID = process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID || process.env.NEXT_PUBLIC_CLIENT_ID || '';
 let REDIRECT_URI = '';
 
 if (typeof window !== 'undefined') {
@@ -55,6 +55,11 @@ export const useDiscordAuth = () => {
   }, []);
 
   const login = () => {
+    if (!DISCORD_CLIENT_ID) {
+      alert("Discord OAuth Client ID is not configured. Please add NEXT_PUBLIC_DISCORD_CLIENT_ID in your .env.local file.");
+      return;
+    }
+
     const redirectUri = `${window.location.origin}/#whitelist`;
   
     const params = new URLSearchParams({

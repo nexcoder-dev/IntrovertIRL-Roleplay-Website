@@ -11,14 +11,14 @@ export function Footer() {
               <div className="relative w-8 h-8">
                 <Image
                   src="/images/logo.png"
-                  alt="Starline RP Logo"
+                  alt="IntrovertIRL RP Logo"
                   width={32}
                   height={32}
                   className="object-contain"
                 />
               </div>
               <span className="text-xl font-bold bg-gradient-to-r from-orange-500 via-white to-green-600 bg-clip-text text-transparent">
-                STARLINE RP
+                INTROVERTIRL RP
               </span>
             </Link>
             <p className="text-zinc-400 text-sm">
@@ -108,7 +108,7 @@ export function Footer() {
 
         <div className="border-t border-zinc-800 mt-8 pt-8 text-center text-zinc-500 text-sm">
           <p>
-            © {new Date().getFullYear()} Starline Roleplay. All rights reserved. Not affiliated with Rockstar Games or
+            © {new Date().getFullYear()} IntrovertIRL Roleplay. All rights reserved. Not affiliated with Rockstar Games or
             Take-Two Interactive.
           </p>
         </div>

@@ -66,15 +66,17 @@ export function JoinServer() {
             <div className="flex items-center justify-center gap-4 mb-6">
               <div className="bg-zinc-900 px-4 py-2 rounded-lg">
                 <p className="text-zinc-400 text-sm">Server IP</p>
-                <p className="font-mono text-orange-400">play.starlinerp.com</p>
+                <p className="font-mono text-orange-400">play.introvertirlrp.com</p>
               </div>
               <div className="bg-zinc-900 px-4 py-2 rounded-lg">
                 <p className="text-zinc-400 text-sm">Direct Connect</p>
-                <p className="font-mono text-green-400">fivem://connect/starlinerp.com</p>
+                <p className="font-mono text-green-400">fivem://connect/introvertirlrp.com</p>
               </div>
             </div>
-            <Button className="bg-gradient-to-r from-orange-500 to-green-600 hover:from-orange-600 hover:to-green-700">
-              Connect to Server
+            <Button className="bg-gradient-to-r from-orange-500 to-green-600 hover:from-orange-600 hover:to-green-700" asChild>
+              <a href="fivem://connect/introvertirlrp.com">
+                Connect to Server
+              </a>
             </Button>
           </div>
         </div>

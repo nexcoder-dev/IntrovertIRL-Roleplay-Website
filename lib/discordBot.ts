@@ -31,7 +31,7 @@ client.on('interactionCreate', async (interaction) => {
     .setTitle(action === 'accept' ? '🎉 Application Accepted!' : '🚫 Application Rejected')
     .setDescription(
       action === 'accept'
-        ? 'Congratulations! Your whitelist application has been **accepted**. Welcome to Starline RP!'
+        ? 'Congratulations! Your whitelist application has been **accepted**. Welcome to IntrovertIRL RP!'
         : 'We regret to inform you that your whitelist application has been **rejected**. You may try again later.'
     )
     .setTimestamp();
